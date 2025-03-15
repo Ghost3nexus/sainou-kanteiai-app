@@ -40,7 +40,7 @@ export async function POST(request: Request) {
  * @param gender 性別（任意）
  * @returns 動物占いの診断結果
  */
-function calculateAnimalFortune(birthdate: string, gender?: string) {
+function calculateAnimalFortune(birthdate: string, _gender?: string) {
   // 生年月日をパース
   const birthdateObj = new Date(birthdate);
   const year = birthdateObj.getFullYear();

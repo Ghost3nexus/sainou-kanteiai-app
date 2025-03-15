@@ -7,12 +7,20 @@
  */
 
 // APIレスポンスの型定義
+// ユーザー情報の型定義
+export type UserInfo = {
+  id: string;
+  name?: string;
+  email?: string;
+  [key: string]: unknown;
+};
+
 export type ApiResponse<T> = {
   success: boolean;
   result?: T;
   message?: string;
   error?: string;
-  user?: any;
+  user?: UserInfo;
 };
 
 // 数値解析結果の型定義
@@ -197,10 +205,13 @@ const defaultOptions: RequestInit = {
  * @param options その他のフェッチオプション
  * @returns レスポンスデータ
  */
+// APIリクエストデータの型定義
+export type ApiRequestData = Record<string, unknown>;
+
 async function fetchAPI<T>(
   endpoint: string,
   method: string = 'GET',
-  data?: any,
+  data?: ApiRequestData,
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -244,7 +255,7 @@ async function fetchAPI<T>(
  * @param data 解析に必要なデータ
  * @returns 解析結果
  */
-export async function fetchNumberAnalysis(data: any): Promise<ApiResponse<NumberAnalysisResult>> {
+export async function fetchNumberAnalysis(data: ApiRequestData): Promise<ApiResponse<NumberAnalysisResult>> {
   return fetchAPI<ApiResponse<NumberAnalysisResult>>('/parse/number', 'POST', data);
 }
 
@@ -253,7 +264,7 @@ export async function fetchNumberAnalysis(data: any): Promise<ApiResponse<Number
  * @param data 解析に必要なデータ
  * @returns 解析結果
  */
-export async function fetchTimeSpaceAnalysis(data: any): Promise<ApiResponse<TimeSpaceAnalysisResult>> {
+export async function fetchTimeSpaceAnalysis(data: ApiRequestData): Promise<ApiResponse<TimeSpaceAnalysisResult>> {
   return fetchAPI<ApiResponse<TimeSpaceAnalysisResult>>('/parse/time-space', 'POST', data);
 }
 
@@ -262,7 +273,7 @@ export async function fetchTimeSpaceAnalysis(data: any): Promise<ApiResponse<Tim
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchMbtiAnalysis(data: any): Promise<ApiResponse<MbtiAnalysisResult>> {
+export async function fetchMbtiAnalysis(data: ApiRequestData): Promise<ApiResponse<MbtiAnalysisResult>> {
   return fetchAPI<ApiResponse<MbtiAnalysisResult>>('/parse/mbti', 'POST', data);
 }
 
@@ -271,7 +282,7 @@ export async function fetchMbtiAnalysis(data: any): Promise<ApiResponse<MbtiAnal
  * @param userData ユーザー情報
  * @returns 処理結果
  */
-export async function submitUserInfo(userData: any): Promise<ApiResponse<any>> {
+export async function submitUserInfo(userData: ApiRequestData): Promise<ApiResponse<UserInfo>> {
   return fetchAPI<ApiResponse<any>>('/users', 'POST', userData);
 }
 
@@ -337,7 +348,7 @@ export async function fetchDashboardSummary(params?: Record<string, string>) {
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchNumerologyFortune(data: any): Promise<ApiResponse<NumerologyResult>> {
+export async function fetchNumerologyFortune(data: ApiRequestData): Promise<ApiResponse<NumerologyResult>> {
   return fetchAPI<ApiResponse<NumerologyResult>>('/fortune/numerology', 'POST', data);
 }
 
@@ -346,7 +357,7 @@ export async function fetchNumerologyFortune(data: any): Promise<ApiResponse<Num
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchFourPillarsFortune(data: any): Promise<ApiResponse<FourPillarsResult>> {
+export async function fetchFourPillarsFortune(data: ApiRequestData): Promise<ApiResponse<FourPillarsResult>> {
   return fetchAPI<ApiResponse<FourPillarsResult>>('/fortune/fourPillars', 'POST', data);
 }
 
@@ -355,7 +366,7 @@ export async function fetchFourPillarsFortune(data: any): Promise<ApiResponse<Fo
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchSanmeiFortune(data: any): Promise<ApiResponse<SanmeiResult>> {
+export async function fetchSanmeiFortune(data: ApiRequestData): Promise<ApiResponse<SanmeiResult>> {
   return fetchAPI<ApiResponse<SanmeiResult>>('/fortune/sanmei', 'POST', data);
 }
 
@@ -364,7 +375,7 @@ export async function fetchSanmeiFortune(data: any): Promise<ApiResponse<SanmeiR
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchMbtiFortune(data: any): Promise<ApiResponse<MbtiFortuneResult>> {
+export async function fetchMbtiFortune(data: ApiRequestData): Promise<ApiResponse<MbtiFortuneResult>> {
   return fetchAPI<ApiResponse<MbtiFortuneResult>>('/fortune/mbti', 'POST', data);
 }
 
@@ -373,7 +384,7 @@ export async function fetchMbtiFortune(data: any): Promise<ApiResponse<MbtiFortu
  * @param data 診断に必要なデータ
  * @returns 診断結果
  */
-export async function fetchAnimalFortune(data: any): Promise<ApiResponse<AnimalFortuneResult>> {
+export async function fetchAnimalFortune(data: ApiRequestData): Promise<ApiResponse<AnimalFortuneResult>> {
   return fetchAPI<ApiResponse<AnimalFortuneResult>>('/fortune/animalFortune', 'POST', data);
 }
 
@@ -382,7 +393,7 @@ export async function fetchAnimalFortune(data: any): Promise<ApiResponse<AnimalF
  * @param data 保存するデータ
  * @returns 保存結果
  */
-export async function saveFortuneResult(data: any): Promise<ApiResponse<{ id: string }>> {
+export async function saveFortuneResult(data: ApiRequestData): Promise<ApiResponse<{ id: string }>> {
   return fetchAPI<ApiResponse<{ id: string }>>('/fortune/save', 'POST', data);
 }
 
@@ -391,7 +402,7 @@ export async function saveFortuneResult(data: any): Promise<ApiResponse<{ id: st
  * @param resultId 結果ID
  * @returns 占い結果
  */
-export async function fetchFortuneResult(resultId: string): Promise<any> {
+export async function fetchFortuneResult(resultId: string): Promise<ApiResponse<FortuneResult>> {
   return fetchAPI(`/fortune/save/${resultId}`);
 }
 
@@ -400,6 +411,6 @@ export async function fetchFortuneResult(resultId: string): Promise<any> {
  * @param userId ユーザーID
  * @returns 占い結果リスト
  */
-export async function fetchUserFortuneResults(userId: string): Promise<ApiResponse<any[]>> {
+export async function fetchUserFortuneResults(userId: string): Promise<ApiResponse<FortuneResult[]>> {
   return fetchAPI<ApiResponse<any[]>>(`/fortune/save?userId=${userId}`);
 }
