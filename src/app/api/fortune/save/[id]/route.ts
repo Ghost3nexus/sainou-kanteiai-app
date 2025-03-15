@@ -5,13 +5,20 @@ import path from 'path';
 // 結果を保存するディレクトリ
 const RESULTS_DIR = path.join(process.cwd(), 'data', 'fortune-results');
 
+// パラメータの型定義
+type RouteParams = {
+  params: {
+    id: string;
+  };
+};
+
 /**
  * GET /api/fortune/save/[id]
  * 特定の占い結果を取得するエンドポイント
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
     const resultId = params.id;
@@ -51,7 +58,7 @@ export async function GET(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
     const resultId = params.id;

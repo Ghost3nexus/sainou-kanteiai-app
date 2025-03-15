@@ -15,8 +15,15 @@ type FortuneResult = {
   createdAt: string;
 };
 
+// パラメータの型定義
+type PageParams = {
+  params: {
+    id: string;
+  };
+};
+
 // 動的メタデータ
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: PageParams) {
   const resultId = params.id;
   
   try {
@@ -317,7 +324,7 @@ function FortuneResultDisplay({ type, result }: { type: string; result: any }) {
 }
 
 // ページコンポーネント
-export default async function FortuneSharePage({ params }: { params: { id: string } }) {
+export default async function FortuneSharePage({ params }: PageParams) {
   const resultId = params.id;
   const result = await getFortuneResult(resultId);
   
