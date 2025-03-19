@@ -414,3 +414,38 @@ export async function fetchFortuneResult(resultId: string): Promise<ApiResponse<
 export async function fetchUserFortuneResults(userId: string): Promise<ApiResponse<FortuneResult[]>> {
   return fetchAPI<ApiResponse<any[]>>(`/fortune/save?userId=${userId}`);
 }
+
+/**
+ * 診断結果を比較する関数
+ * @param resultIds 比較する診断結果のID配列
+ * @returns 比較結果
+ */
+export async function compareFortuneResults(resultIds: string[]): Promise<ApiResponse<any>> {
+  return fetchAPI<ApiResponse<any>>('/compare', 'POST', { resultIds });
+}
+
+/**
+ * AIフィードバックを取得する関数
+ * @param resultId 診断結果ID
+ * @returns AIフィードバック
+ */
+export async function fetchAIFeedback(resultId: string): Promise<ApiResponse<any>> {
+  return fetchAPI<ApiResponse<any>>('/ai-feedback', 'POST', { resultId });
+}
+
+/**
+ * APIキー設定を取得する関数
+ * @returns APIキー設定
+ */
+export async function fetchApiKeySettings(): Promise<{ openai: string }> {
+  return fetchAPI<{ openai: string }>('/settings/apikey');
+}
+
+/**
+ * APIキー設定を保存する関数
+ * @param apiKey OpenAI APIキー
+ * @returns 保存結果
+ */
+export async function saveApiKeySettings(apiKey: string): Promise<ApiResponse<any>> {
+  return fetchAPI<ApiResponse<any>>('/settings/apikey', 'POST', { openai: apiKey });
+}
