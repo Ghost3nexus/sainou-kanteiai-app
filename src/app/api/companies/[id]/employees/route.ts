@@ -4,7 +4,8 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import type { Company } from '../../route';
 
-const COMPANIES_DIR = path.join(process.cwd(), 'data', 'companies');
+// 会社情報を保存するディレクトリ（/tmpを使用）
+const COMPANIES_DIR = path.join('/tmp', 'companies');
 
 // 会社情報を読み込む
 function getCompany(companyId: string): Company | null {

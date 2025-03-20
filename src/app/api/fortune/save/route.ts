@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// 結果を保存するディレクトリ
-const RESULTS_DIR = path.join(process.cwd(), 'data', 'fortune-results');
+// 結果を保存するディレクトリ（/tmpを使用）
+const RESULTS_DIR = path.join('/tmp', 'fortune-results');
 
 // ディレクトリが存在しない場合は作成
 if (!fs.existsSync(RESULTS_DIR)) {

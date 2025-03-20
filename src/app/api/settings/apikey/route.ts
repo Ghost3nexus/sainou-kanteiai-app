@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-// 設定を保存するディレクトリ
-const SETTINGS_DIR = path.join(process.cwd(), 'data', 'settings');
+// 設定を保存するディレクトリ（/tmpを使用）
+const SETTINGS_DIR = path.join('/tmp', 'settings');
 
 // ディレクトリが存在しない場合は作成
 if (!fs.existsSync(SETTINGS_DIR)) {

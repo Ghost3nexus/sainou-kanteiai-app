@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// 会社情報を保存するディレクトリ
-const COMPANIES_DIR = path.join(process.cwd(), 'data', 'companies');
+// 会社情報を保存するディレクトリ（/tmpを使用）
+const COMPANIES_DIR = path.join('/tmp', 'companies');
 
 // ディレクトリが存在しない場合は作成
 if (!fs.existsSync(COMPANIES_DIR)) {
@@ -73,13 +73,15 @@ export async function GET() {
     const companies: Company[] = [];
     
     // 会社情報ディレクトリ内のすべてのファイルを読み込む
-    const files = fs.readdirSync(COMPANIES_DIR);
-    
-    for (const file of files) {
-      if (file.endsWith('.json')) {
-        const filePath = path.join(COMPANIES_DIR, file);
-        const data = fs.readFileSync(filePath, 'utf-8');
-        companies.push(JSON.parse(data));
+    if (fs.existsSync(COMPANIES_DIR)) {
+      const files = fs.readdirSync(COMPANIES_DIR);
+      
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const filePath = path.join(COMPANIES_DIR, file);
+          const data = fs.readFileSync(filePath, 'utf-8');
+          companies.push(JSON.parse(data));
+        }
       }
     }
     
