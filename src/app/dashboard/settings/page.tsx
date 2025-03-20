@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ApiKeySettings from '@/components/settings/ApiKeySettings';
+import CompanySettings from '@/components/settings/CompanySettings';
 import { fetchApiKeySettings, saveApiKeySettings } from '@/lib/api';
 
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'company' | 'api'>('company');
 
   // APIキー設定を取得
   useEffect(() => {
@@ -70,6 +72,32 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {/* タブナビゲーション */}
+        <div className="mb-8">
+          <nav className="flex space-x-4" aria-label="Tabs">
+            <button
+              onClick={() => setActiveTab('company')}
+              className={`px-3 py-2 font-medium text-sm rounded-md ${
+                activeTab === 'company'
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              会社設定
+            </button>
+            <button
+              onClick={() => setActiveTab('api')}
+              className={`px-3 py-2 font-medium text-sm rounded-md ${
+                activeTab === 'api'
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              APIキー設定
+            </button>
+          </nav>
+        </div>
+
         {isLoading ? (
           <div className="bg-white shadow rounded-lg p-6 mb-8 flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -77,23 +105,14 @@ export default function SettingsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            <ApiKeySettings
-              initialApiKey={apiKey}
-              onSave={handleSaveApiKey}
-            />
-
-            <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">その他の設定</h2>
-              <p className="text-gray-600 mb-4">
-                今後、ここに追加の設定オプションが表示されます。
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>ユーザープロフィール設定</li>
-                <li>通知設定</li>
-                <li>プライバシー設定</li>
-                <li>データエクスポート</li>
-              </ul>
-            </div>
+            {activeTab === 'company' ? (
+              <CompanySettings />
+            ) : (
+              <ApiKeySettings
+                initialApiKey={apiKey}
+                onSave={handleSaveApiKey}
+              />
+            )}
           </div>
         )}
       </div>
