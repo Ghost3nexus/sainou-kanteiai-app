@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import ShareButtons from '@/components/ui/ShareButtons';
 import {
   fetchNumerologyFortune,
   fetchFourPillarsFortune,
@@ -2005,37 +2006,33 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
           {/* 結果表示 */}
           <FortuneResultDisplay type={selectedType} result={result} />
           
-          {/* 保存と共有のボタン */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-end">
-            {!saveSuccess && (
-              <button
-                onClick={handleSaveResult}
-                disabled={isSaving}
-                className={`px-6 py-3 bg-indigo-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  isSaving ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
-              >
-                {isSaving ? '保存中...' : '結果を保存する'}
-              </button>
-            )}
-            
-            {saveSuccess && shareUrl && (
-              <>
-                <div className="flex-grow">
-                  <input
-                    type="text"
-                    value={shareUrl}
-                    readOnly
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-                  />
-                </div>
+          {/* 保存と共有のセクション */}
+          <div className="space-y-6">
+            {/* 保存ボタン */}
+            <div className="flex justify-end">
+              {!saveSuccess && (
                 <button
-                  onClick={handleCopyShareUrl}
-                  className="px-6 py-3 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  onClick={handleSaveResult}
+                  disabled={isSaving}
+                  className={`px-6 py-3 bg-indigo-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                    isSaving ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
                 >
-                  URLをコピー
+                  {isSaving ? '保存中...' : '結果を保存する'}
                 </button>
-              </>
+              )}
+            </div>
+
+            {/* シェアボタン */}
+            {saveSuccess && shareUrl && (
+              <div className="bg-white p-6 rounded-xl shadow-md border border-indigo-100">
+                <ShareButtons
+                  url={shareUrl}
+                  title={`${fortuneTypes.find(t => t.id === selectedType)?.name}の診断結果`}
+                  description={`才能鑑定AIで${fortuneTypes.find(t => t.id === selectedType)?.name}の診断を行いました！`}
+                  imageUrl={result?.character?.imageUrl}
+                />
+              </div>
             )}
           </div>
           
