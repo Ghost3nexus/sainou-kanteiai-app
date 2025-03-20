@@ -1627,14 +1627,22 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
     setSaveError('');
     
     try {
+      // デバッグ用にAPIのレスポンスを確認
+      console.log('保存するデータ:', {
+        type: selectedType,
+        result: result,
+      });
+
       // APIクライアント関数を使用して結果を保存
       const saveData = {
         type: selectedType,
-        result: result.result, // result.resultを送信
+        result: result.success ? result.result : result, // APIレスポンスの構造に応じて適切なデータを選択
         userId,
       };
       
+      console.log('送信するデータ:', saveData);
       const saveResult = await saveFortuneResult(saveData);
+      console.log('保存結果:', saveResult);
       
       if (!saveResult.success) {
         throw new Error(saveResult.error || '結果の保存に失敗しました');
