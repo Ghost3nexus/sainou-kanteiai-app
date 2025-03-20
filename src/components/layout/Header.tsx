@@ -44,11 +44,17 @@ export default function Header() {
               >
                 診断テスト
               </Link>
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               >
                 ダッシュボード
+              </Link>
+              <Link
+                href="/analytics"
+                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                データ分析
               </Link>
             </nav>
           </div>
@@ -116,6 +122,12 @@ export default function Header() {
               className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
             >
               ダッシュボード
+            </Link>
+            <Link
+              href="/analytics"
+              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+            >
+              データ分析
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
