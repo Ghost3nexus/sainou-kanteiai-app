@@ -1630,7 +1630,7 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
       // APIクライアント関数を使用して結果を保存
       const saveData = {
         type: selectedType,
-        result,
+        result: result.result, // result.resultを送信
         userId,
       };
       
