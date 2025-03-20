@@ -2037,8 +2037,22 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
           </div>
           
           {saveSuccess && (
-            <div className="p-4 bg-green-100 text-green-700 rounded-md">
-              結果が正常に保存されました。マイページから確認できます。
+            <div className="space-y-4">
+              <div className="p-4 bg-green-100 text-green-700 rounded-md">
+                結果が正常に保存されました。マイページから確認できます。
+              </div>
+              <div className="flex justify-end">
+                <Link
+                  href={`/report/${result.id}`}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                  </svg>
+                  詳細レポートを生成
+                </Link>
+              </div>
             </div>
           )}
           
