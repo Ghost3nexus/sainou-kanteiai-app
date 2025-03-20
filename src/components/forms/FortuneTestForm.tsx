@@ -8,7 +8,8 @@ import {
   fetchSanmeiFortune,
   fetchMbtiFortune,
   fetchAnimalFortune,
-  saveFortuneResult
+  saveFortuneResult,
+  generateCharacter
 } from '@/lib/api';
 
 // 占いの種類
@@ -45,6 +46,7 @@ const fortuneTypes = [
 
 // MBTIの質問
 const mbtiQuestions = [
+  // 外向性(E) vs 内向性(I)
   {
     id: 'q1',
     question: '初対面の人との会話で、あなたは：',
@@ -52,7 +54,7 @@ const mbtiQuestions = [
       { id: 'e', text: '積極的に話しかけ、会話を広げる' },
       { id: 'i', text: '相手からの話題を待ち、慎重に応答する' }
     ],
-    category: 'ei' // 外向性(E) vs 内向性(I)
+    category: 'ei'
   },
   {
     id: 'q2',
@@ -65,15 +67,35 @@ const mbtiQuestions = [
   },
   {
     id: 'q3',
+    question: 'グループ活動で、あなたは：',
+    options: [
+      { id: 'e', text: '積極的に意見を出し、議論をリードする' },
+      { id: 'i', text: '他の人の意見をよく聞き、じっくり考えてから発言する' }
+    ],
+    category: 'ei'
+  },
+  {
+    id: 'q4',
+    question: 'エネルギーを回復するとき、あなたは：',
+    options: [
+      { id: 'e', text: '人と会って話をすることで元気になる' },
+      { id: 'i', text: '一人の時間を持つことでリフレッシュする' }
+    ],
+    category: 'ei'
+  },
+
+  // 感覚(S) vs 直感(N)
+  {
+    id: 'q5',
     question: '情報を処理する際、あなたは：',
     options: [
       { id: 's', text: '具体的な事実や詳細に注目する' },
       { id: 'n', text: '全体的なパターンや可能性を重視する' }
     ],
-    category: 'sn' // 感覚(S) vs 直感(N)
+    category: 'sn'
   },
   {
-    id: 'q4',
+    id: 'q6',
     question: '新しいアイデアに対して、あなたは：',
     options: [
       { id: 's', text: '実用性や実現可能性を重視する' },
@@ -82,16 +104,36 @@ const mbtiQuestions = [
     category: 'sn'
   },
   {
-    id: 'q5',
+    id: 'q7',
+    question: '問題解決において、あなたは：',
+    options: [
+      { id: 's', text: '過去の経験や実績のある方法を重視する' },
+      { id: 'n', text: '新しいアプローチや独創的な解決策を探る' }
+    ],
+    category: 'sn'
+  },
+  {
+    id: 'q8',
+    question: '仕事や学習で、あなたが得意なのは：',
+    options: [
+      { id: 's', text: '具体的な手順や方法を実践すること' },
+      { id: 'n', text: '新しい概念や理論を考えること' }
+    ],
+    category: 'sn'
+  },
+
+  // 思考(T) vs 感情(F)
+  {
+    id: 'q9',
     question: '決断を下す際、あなたは：',
     options: [
       { id: 't', text: '論理的な分析と客観的な事実に基づいて判断する' },
       { id: 'f', text: '人々の感情や価値観を考慮して判断する' }
     ],
-    category: 'tf' // 思考(T) vs 感情(F)
+    category: 'tf'
   },
   {
-    id: 'q6',
+    id: 'q10',
     question: '意見の対立があった場合、あなたは：',
     options: [
       { id: 't', text: '論理的な議論で相手を説得しようとする' },
@@ -100,20 +142,58 @@ const mbtiQuestions = [
     category: 'tf'
   },
   {
-    id: 'q7',
+    id: 'q11',
+    question: 'フィードバックを与える際、あなたは：',
+    options: [
+      { id: 't', text: '率直に改善点を指摘する' },
+      { id: 'f', text: '相手の気持ちに配慮しながら伝える' }
+    ],
+    category: 'tf'
+  },
+  {
+    id: 'q12',
+    question: 'チーム内での役割として、あなたが得意なのは：',
+    options: [
+      { id: 't', text: '目標達成のための戦略立案や進捗管理' },
+      { id: 'f', text: 'チームの調和を保ち、メンバーをサポートすること' }
+    ],
+    category: 'tf'
+  },
+
+  // 判断(J) vs 知覚(P)
+  {
+    id: 'q13',
     question: '計画を立てる際、あなたは：',
     options: [
       { id: 'j', text: '詳細な計画を事前に立て、それに従って進める' },
       { id: 'p', text: '大まかな方向性だけ決め、状況に応じて柔軟に対応する' }
     ],
-    category: 'jp' // 判断(J) vs 知覚(P)
+    category: 'jp'
   },
   {
-    id: 'q8',
+    id: 'q14',
     question: '締め切りのある仕事に対して、あなたは：',
     options: [
       { id: 'j', text: '計画的に進め、余裕を持って完了させる' },
       { id: 'p', text: '締め切り直前に集中して取り組むことが多い' }
+    ],
+    category: 'jp'
+  },
+  {
+    id: 'q15',
+    question: '予定変更に対して、あなたは：',
+    options: [
+      { id: 'j', text: 'できるだけ避けたい、または早めに知りたい' },
+      { id: 'p', text: '柔軟に対応できる、むしろ新鮮に感じる' }
+    ],
+    category: 'jp'
+  },
+  {
+    id: 'q16',
+    question: '仕事や生活環境について、あなたは：',
+    options: [
+      { id: 'j', text: '整理整頓された、予測可能な状態を好む' },
+      { id: 'p', text: '自由で柔軟な、創造的な雰囲気を好む' }
     ],
     category: 'jp'
   }
@@ -207,14 +287,13 @@ const FourPillarsForm = ({ onSubmit, userId }: { onSubmit: (data: any) => void, 
       
       <div>
         <label htmlFor="birthtime" className="block text-sm font-medium text-gray-700 mb-1">
-          生まれた時間 <span className="text-red-500">*</span>
+          生まれた時間（任意）
         </label>
         <input
           type="time"
           id="birthtime"
           value={birthtime}
           onChange={(e) => setBirthtime(e.target.value)}
-          required
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
         />
         <p className="mt-1 text-sm text-gray-500">
@@ -1211,10 +1290,35 @@ if (type === 'numerology') {
                 </div>
               </div>
               
-              <div className="mt-6 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
-                <p className="text-gray-700 leading-relaxed">
-                  {description && description.full}
-                </p>
+              <div className="mt-6 space-y-6">
+                <div className="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                  <p className="text-gray-700 leading-relaxed">
+                    {description && description.full}
+                  </p>
+                </div>
+
+                {result.character && (
+                  <div className="bg-white p-6 rounded-xl shadow-md border border-indigo-100">
+                    <h4 className="text-lg font-semibold text-indigo-700 mb-4 flex items-center">
+                      <span className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center mr-2 text-sm font-bold">キ</span>
+                      キャラクター設定
+                    </h4>
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/3">
+                        <img
+                          src={result.character.imageUrl}
+                          alt="Character illustration"
+                          className="w-full h-auto rounded-lg shadow-md"
+                        />
+                      </div>
+                      <div className="md:w-2/3">
+                        <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                          {result.character.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -1466,16 +1570,41 @@ if (type === 'numerology') {
               </div>
             </div>
             
-            <div className="bg-white p-8 rounded-xl shadow-md border border-amber-100 hover:border-amber-300 transition-colors duration-300">
-              <h4 className="text-xl font-semibold text-amber-700 mb-4 flex items-center">
-                <span className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mr-2 text-sm font-bold">診</span>
-                アドバイス
-              </h4>
-              <div className="p-4 bg-amber-50 rounded-lg">
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                  {summary}
-                </p>
+            <div className="space-y-6">
+              <div className="bg-white p-8 rounded-xl shadow-md border border-amber-100 hover:border-amber-300 transition-colors duration-300">
+                <h4 className="text-xl font-semibold text-amber-700 mb-4 flex items-center">
+                  <span className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mr-2 text-sm font-bold">診</span>
+                  アドバイス
+                </h4>
+                <div className="p-4 bg-amber-50 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                    {summary}
+                  </p>
+                </div>
               </div>
+
+              {result.character && (
+                <div className="bg-white p-6 rounded-xl shadow-md border border-amber-100">
+                  <h4 className="text-lg font-semibold text-amber-700 mb-4 flex items-center">
+                    <span className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mr-2 text-sm font-bold">キ</span>
+                    キャラクター設定
+                  </h4>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="md:w-1/3">
+                      <img
+                        src={result.character.imageUrl}
+                        alt="Character illustration"
+                        className="w-full h-auto rounded-lg shadow-md"
+                      />
+                    </div>
+                    <div className="md:w-2/3">
+                      <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                        {result.character.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1613,8 +1742,29 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
         throw new Error(response.error || '診断結果の取得に失敗しました');
       }
       
-      // 結果データを設定（APIレスポンスではなく、実際の結果データ）
-      setResult(response.result);
+      // 結果を設定
+      const resultData = response.result;
+      setResult(resultData);
+
+      // MBTIと動物占いの場合はキャラクターを生成
+      if ((selectedType === 'mbti' || selectedType === 'animalFortune') && resultData) {
+        try {
+          const characterResult = await generateCharacter(selectedType, resultData);
+          if (characterResult.success) {
+            if (characterResult.result) {
+              setResult({
+                ...resultData,
+                character: {
+                  description: characterResult.result.description,
+                  imageUrl: characterResult.result.imageUrl
+                }
+              });
+            }
+          }
+        } catch (error) {
+          console.error('キャラクター生成エラー:', error);
+        }
+      }
     } catch (error) {
       console.error('エラー詳細:', error);
       setSaveError(`診断結果の取得に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`);

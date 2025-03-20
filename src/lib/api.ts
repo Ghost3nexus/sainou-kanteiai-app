@@ -434,6 +434,22 @@ export async function fetchAIFeedback(resultId: string): Promise<ApiResponse<any
 }
 
 /**
+ * キャラクター生成を行う関数
+ * @param type 占いタイプ（'mbti' | 'animalFortune'）
+ * @param result 占い結果
+ * @returns キャラクター情報
+ */
+export async function generateCharacter(
+  type: 'mbti' | 'animalFortune',
+  result: any
+): Promise<ApiResponse<{
+  description: string;
+  imageUrl: string;
+}>> {
+  return fetchAPI<ApiResponse<any>>('/character-generation', 'POST', { type, result });
+}
+
+/**
  * APIキー設定を取得する関数
  * @returns APIキー設定
  */
