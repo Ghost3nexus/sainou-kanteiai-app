@@ -1583,37 +1583,38 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
     
     try {
       // APIクライアント関数を使用して結果を取得
-      let resultData;
+      let response;
       
       switch (selectedType) {
         case 'numerology':
-          resultData = await fetchNumerologyFortune(data);
+          response = await fetchNumerologyFortune(data);
           break;
         case 'fourPillars':
-          resultData = await fetchFourPillarsFortune(data);
+          response = await fetchFourPillarsFortune(data);
           break;
         case 'sanmei':
-          resultData = await fetchSanmeiFortune(data);
+          response = await fetchSanmeiFortune(data);
           break;
         case 'mbti':
-          resultData = await fetchMbtiFortune(data);
+          response = await fetchMbtiFortune(data);
           break;
         case 'animalFortune':
-          resultData = await fetchAnimalFortune(data);
+          response = await fetchAnimalFortune(data);
           break;
         default:
           throw new Error('不明な占いタイプです');
       }
       
-      if (!resultData) {
+      if (!response) {
         throw new Error('結果データが見つかりません');
       }
       
-      if (!resultData.success) {
-        throw new Error(resultData.error || '診断結果の取得に失敗しました');
+      if (!response.success) {
+        throw new Error(response.error || '診断結果の取得に失敗しました');
       }
       
-      setResult(resultData);
+      // 結果データを設定（APIレスポンスではなく、実際の結果データ）
+      setResult(response.result);
     } catch (error) {
       console.error('エラー詳細:', error);
       setSaveError(`診断結果の取得に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`);
@@ -1627,22 +1628,14 @@ function FortuneTestForm({ userId, compact = false }: { userId?: string, compact
     setSaveError('');
     
     try {
-      // デバッグ用にAPIのレスポンスを確認
-      console.log('保存するデータ:', {
-        type: selectedType,
-        result: result,
-      });
-
       // APIクライアント関数を使用して結果を保存
       const saveData = {
         type: selectedType,
-        result: result.success ? result.result : result, // APIレスポンスの構造に応じて適切なデータを選択
+        result: result, // 既にhandleFormSubmitで実際の結果データを設定済み
         userId,
       };
       
-      console.log('送信するデータ:', saveData);
       const saveResult = await saveFortuneResult(saveData);
-      console.log('保存結果:', saveResult);
       
       if (!saveResult.success) {
         throw new Error(saveResult.error || '結果の保存に失敗しました');
